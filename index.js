@@ -15,7 +15,9 @@ class Account {
   }
 
   addTransaction(transaction) {
-    this.transactions.push(transaction);
+    if (!transaction.isAllowed() && transaction.value < 0) {
+      console.log("Transaction not allowed!");
+    } else this.transactions.push(transaction);
   }
 }
 
@@ -31,6 +33,12 @@ class Transaction {
     // Add the transaction to the account
     this.account.addTransaction(this);
     //as an example it calls t1.account.addTransaction() and puts the whole object (t1) in it. And because this.account is assigned myAccount it effectively calls myAccount.addTransaction(t1) // Clever!
+  }
+
+  isAllowed() {
+    if (this.account.balance === 0) {
+      return false;
+    } else return true;
   }
 }
 
@@ -52,18 +60,18 @@ const myAccount = new Account("billybob");
 
 console.log("Starting Balance:", myAccount.balance);
 
+const t2 = new Withdrawal(50.0, myAccount);
+console.log(t2.value);
+console.log(t2);
+t2.commit();
+console.log(myAccount.transactions);
+console.log(myAccount.balance);
+
 const t1 = new Deposit(120.0, myAccount);
 console.log(t1.value);
 console.log(t1);
 t1.commit();
 
-console.log(myAccount.transactions);
-console.log(myAccount.balance);
-
-const t2 = new Withdrawal(50.0, myAccount);
-console.log(t2.value);
-console.log(t2);
-t2.commit();
 console.log(myAccount.transactions);
 console.log(myAccount.balance);
 
